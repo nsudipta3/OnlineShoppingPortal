@@ -7,15 +7,14 @@ if(strlen($_SESSION['login'])==0)
 header('location:login.php');
 }
 else{
-	if (isset($_GET['id'])) {
+	if (isset($_POST['submit'])) {
 
-		mysqli_query($con,"delete from orders  where userId='".$_SESSION['id']."' and paymentMethod is null and id='".$_GET['id']."' ");
-		;
+		mysqli_query($con,"update orders set 	paymentMethod='".$_POST['paymethod']."' where userId='".$_SESSION['id']."' and paymentMethod is null ");
+		unset($_SESSION['cart']);
+		header('location:order-history.php');
 
 	}
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -28,7 +27,7 @@ else{
 	    <meta name="keywords" content="MediaCenter, Template, eCommerce">
 	    <meta name="robots" content="all">
 
-	    <title>Pending Order History</title>
+	    <title>Shopping Portal | Payment Method</title>
 	    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 	    <link rel="stylesheet" href="assets/css/main.css">
 	    <link rel="stylesheet" href="assets/css/green.css">
@@ -39,145 +38,84 @@ else{
 		<link rel="stylesheet" href="assets/css/animate.min.css">
 		<link rel="stylesheet" href="assets/css/rateit.css">
 		<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
-
-		<!-- Demo Purpose Only. Should be removed in production -->
 		<link rel="stylesheet" href="assets/css/config.css">
-
 		<link href="assets/css/green.css" rel="alternate stylesheet" title="Green color">
 		<link href="assets/css/blue.css" rel="alternate stylesheet" title="Blue color">
 		<link href="assets/css/red.css" rel="alternate stylesheet" title="Red color">
 		<link href="assets/css/orange.css" rel="alternate stylesheet" title="Orange color">
 		<link href="assets/css/dark-green.css" rel="alternate stylesheet" title="Darkgreen color">
-		<!-- Demo Purpose Only. Should be removed in production : END -->
-
-		
-		<!-- Icons/Glyphs -->
 		<link rel="stylesheet" href="assets/css/font-awesome.min.css">
-
-        <!-- Fonts --> 
 		<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
-		
-		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/images/favicon.ico">
-
-		<!-- HTML5 elements and media queries Support for IE8 : HTML5 shim and Respond.js -->
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-
 	</head>
     <body class="cnt-home">
 	
 		
-	
-		<!-- ============================================== HEADER ============================================== -->
 <header class="header-style-1">
 <?php include('includes/top-header.php');?>
 <?php include('includes/main-header.php');?>
 <?php include('includes/menu-bar.php');?>
 </header>
-<!-- ============================================== HEADER : END ============================================== -->
 <div class="breadcrumb">
 	<div class="container">
 		<div class="breadcrumb-inner">
 			<ul class="list-inline list-unstyled">
-				<li><a href="#">Home</a></li>
-				<li class='active'>Shopping Cart</li>
+				<li><a href="home.html">Home</a></li>
+				<li class='active'>Payment Method</li>
 			</ul>
 		</div><!-- /.breadcrumb-inner -->
 	</div><!-- /.container -->
 </div><!-- /.breadcrumb -->
 
-<div class="body-content outer-top-xs">
+<div class="body-content outer-top-bd">
 	<div class="container">
-		<div class="row inner-bottom-sm">
-			<div class="shopping-cart">
-				<div class="col-md-12 col-sm-12 shopping-cart-table ">
-	<div class="table-responsive">
-<form name="cart" method="post">	
+		<div class="checkout-box faq-page inner-bottom-sm">
+			<div class="row">
+				<div class="col-md-12">
+					<h2>Choose Payment Method</h2>
+					<div class="panel-group checkout-steps" id="accordion">
+						<!-- checkout-step-01  -->
+<div class="panel panel-default checkout-step-01">
 
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th class="cart-romove item">#</th>
-					<th class="cart-description item">Image</th>
-					<th class="cart-product-name item">Product Name</th>
-			
-					<th class="cart-qty item">Quantity</th>
-					<th class="cart-sub-total item">Price Per unit</th>
-						<th class="cart-sub-total item">Shiping Charge</th>
-					<th class="cart-total">Grandtotal</th>
-					<th class="cart-total item">Payment Method</th>
-					<th class="cart-description item">Order Date</th>
-					<th class="cart-total last-item">Action</th>
-				</tr>
-			</thead><!-- /thead -->
-			
-			<tbody>
+	<!-- panel-heading -->
+		<div class="panel-heading">
+    	<h4 class="unicase-checkout-title">
+	        <a data-toggle="collapse" class="" data-parent="#accordion" href="#collapseOne">
+	         Select your Payment Method
+	        </a>
+	     </h4>
+    </div>
+    <!-- panel-heading -->
 
-<?php $query=mysqli_query($con,"select products.productImage1 as pimg1,products.productName as pname,products.id as c,orders.productId as opid,orders.quantity as qty,products.productPrice as pprice,products.shippingCharge as shippingcharge,orders.paymentMethod as paym,orders.orderDate as odate,orders.id as oid from orders join products on orders.productId=products.id where orders.userId='".$_SESSION['id']."' and orders.paymentMethod is null");
-$cnt=1;
-$num=mysqli_num_rows($query);
-if($num>0)
-{
-while($row=mysqli_fetch_array($query))
-{
-?>
-				<tr>
-					<td><?php echo $cnt;?></td>
-					<td class="cart-image">
-						<a class="entry-thumbnail" href="detail.html">
-						    <img src="admin/productimages/<?php echo $row['proid'];?>/<?php echo $row['pimg1'];?>" alt="" width="84" height="146">
-						</a>
-					</td>
-					<td class="cart-product-name-info">
-						<h4 class='cart-product-description'><a href="product-details.php?pid=<?php echo $row['opid'];?>">
-						<?php echo $row['pname'];?></a></h4>
-						
-						
-					</td>
-					<td class="cart-product-quantity">
-						<?php echo $qty=$row['qty']; ?>   
-		            </td>
-					<td class="cart-product-sub-total"><?php echo $price=$row['pprice']; ?>  </td>
-					<td class="cart-product-sub-total"><?php echo $shippcharge=$row['shippingcharge']; ?>  </td>
-					<td class="cart-product-grand-total"><?php echo (($qty*$price)+$shippcharge);?></td>
-					<td class="cart-product-sub-total"><?php echo $row['paym']; ?>  </td>
-					<td class="cart-product-sub-total"><?php echo $row['odate']; ?>  </td>
-					
-					<td><a href="pending-orders.php?id=<?php echo $row['oid']; ?> ">Delete</td>
-				</tr>
-<?php $cnt=$cnt+1;} ?>
-<tr>
-	<td colspan="9"><div class="cart-checkout-btn pull-right">
-							<button type="submit" name="ordersubmit" class="btn btn-primary"><a href="payment-method.php">PROCCED To Payment</a></button>
-						
-						</div></td>
+	<div id="collapseOne" class="panel-collapse collapse in">
 
-</tr>
-<?php } else {?>
-<tr>
-<td colspan="10" align="center"><h4>No Result Found</h4></td>
-</tr>
-<?php } ?>
+		<!-- panel-body  -->
+	    <div class="panel-body">
+	    <form name="payment" method="post">
+	    <input type="radio" name="paymethod" value="COD" checked="checked"> COD
+	     <input type="radio" name="paymethod" value="Internet Banking"> Internet Banking
+	     <input type="radio" name="paymethod" value="Debit / Credit card"> Debit / Credit card <br /><br />
+	     <input type="submit" value="submit" name="submit" class="btn btn-primary">
+	    	
 
-		
-			</tbody><!-- /tbody -->
-		</table><!-- /table -->
-		
-	</div>
+	    </form>		
+		</div>
+		<!-- panel-body  -->
+
+	</div><!-- row -->
 </div>
-
-		</div><!-- /.shopping-cart -->
-		</div> <!-- /.row -->
-		</form>
+<!-- checkout-step-01  -->
+					  
+					  	
+					</div><!-- /.checkout-steps -->
+				</div>
+			</div><!-- /.row -->
+		</div><!-- /.checkout-box -->
 		<!-- ============================================== BRANDS CAROUSEL ============================================== -->
 <?php echo include('includes/brands-slider.php');?>
 <!-- ============================================== BRANDS CAROUSEL : END ============================================== -->	</div><!-- /.container -->
 </div><!-- /.body-content -->
 <?php include('includes/footer.php');?>
-
 	<script src="assets/js/jquery-1.11.1.min.js"></script>
 	
 	<script src="assets/js/bootstrap.min.js"></script>
@@ -212,6 +150,9 @@ while($row=mysqli_fetch_array($query))
 		});
 	</script>
 	<!-- For demo purposes – can be removed on production : End -->
+
+	
+
 </body>
 </html>
 <?php } ?>

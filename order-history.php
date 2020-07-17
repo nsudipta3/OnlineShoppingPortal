@@ -7,12 +7,6 @@ if(strlen($_SESSION['login'])==0)
 header('location:login.php');
 }
 else{
-	if (isset($_GET['id'])) {
-
-		mysqli_query($con,"delete from orders  where userId='".$_SESSION['id']."' and paymentMethod is null and id='".$_GET['id']."' ");
-		;
-
-	}
 
 ?>
 
@@ -28,7 +22,7 @@ else{
 	    <meta name="keywords" content="MediaCenter, Template, eCommerce">
 	    <meta name="robots" content="all">
 
-	    <title>Pending Order History</title>
+	    <title>Order History</title>
 	    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 	    <link rel="stylesheet" href="assets/css/main.css">
 	    <link rel="stylesheet" href="assets/css/green.css">
@@ -48,23 +42,21 @@ else{
 		<link href="assets/css/red.css" rel="alternate stylesheet" title="Red color">
 		<link href="assets/css/orange.css" rel="alternate stylesheet" title="Orange color">
 		<link href="assets/css/dark-green.css" rel="alternate stylesheet" title="Darkgreen color">
-		<!-- Demo Purpose Only. Should be removed in production : END -->
-
-		
-		<!-- Icons/Glyphs -->
 		<link rel="stylesheet" href="assets/css/font-awesome.min.css">
-
-        <!-- Fonts --> 
 		<link href='http://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>
-		
-		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/images/favicon.ico">
+	<script language="javascript" type="text/javascript">
+var popUpWin=0;
+function popUpWindow(URLStr, left, top, width, height)
+{
+ if(popUpWin)
+{
+if(!popUpWin.closed) popUpWin.close();
+}
+popUpWin = open(URLStr,'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,copyhistory=yes,width='+600+',height='+600+',left='+left+', top='+top+',screenX='+left+',screenY='+top+'');
+}
 
-		<!-- HTML5 elements and media queries Support for IE8 : HTML5 shim and Respond.js -->
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
+</script>
 
 	</head>
     <body class="cnt-home">
@@ -106,8 +98,8 @@ else{
 			
 					<th class="cart-qty item">Quantity</th>
 					<th class="cart-sub-total item">Price Per unit</th>
-						<th class="cart-sub-total item">Shiping Charge</th>
-					<th class="cart-total">Grandtotal</th>
+					<th class="cart-sub-total item">Shipping Charge</th>
+					<th class="cart-total item">Grandtotal</th>
 					<th class="cart-total item">Payment Method</th>
 					<th class="cart-description item">Order Date</th>
 					<th class="cart-total last-item">Action</th>
@@ -116,11 +108,8 @@ else{
 			
 			<tbody>
 
-<?php $query=mysqli_query($con,"select products.productImage1 as pimg1,products.productName as pname,products.id as c,orders.productId as opid,orders.quantity as qty,products.productPrice as pprice,products.shippingCharge as shippingcharge,orders.paymentMethod as paym,orders.orderDate as odate,orders.id as oid from orders join products on orders.productId=products.id where orders.userId='".$_SESSION['id']."' and orders.paymentMethod is null");
+<?php $query=mysqli_query($con,"select products.productImage1 as pimg1,products.productName as pname,products.id as proid,orders.productId as opid,orders.quantity as qty,products.productPrice as pprice,products.shippingCharge as shippingcharge,orders.paymentMethod as paym,orders.orderDate as odate,orders.id as orderid from orders join products on orders.productId=products.id where orders.userId='".$_SESSION['id']."' and orders.paymentMethod is not null");
 $cnt=1;
-$num=mysqli_num_rows($query);
-if($num>0)
-{
 while($row=mysqli_fetch_array($query))
 {
 ?>
@@ -146,23 +135,12 @@ while($row=mysqli_fetch_array($query))
 					<td class="cart-product-sub-total"><?php echo $row['paym']; ?>  </td>
 					<td class="cart-product-sub-total"><?php echo $row['odate']; ?>  </td>
 					
-					<td><a href="pending-orders.php?id=<?php echo $row['oid']; ?> ">Delete</td>
+					<td>
+ <a href="javascript:void(0);" onClick="popUpWindow('track-order.php?oid=<?php echo htmlentities($row['orderid']);?>');" title="Track order">
+					Track</td>
 				</tr>
 <?php $cnt=$cnt+1;} ?>
-<tr>
-	<td colspan="9"><div class="cart-checkout-btn pull-right">
-							<button type="submit" name="ordersubmit" class="btn btn-primary"><a href="payment-method.php">PROCCED To Payment</a></button>
-						
-						</div></td>
-
-</tr>
-<?php } else {?>
-<tr>
-<td colspan="10" align="center"><h4>No Result Found</h4></td>
-</tr>
-<?php } ?>
-
-		
+				
 			</tbody><!-- /tbody -->
 		</table><!-- /table -->
 		
