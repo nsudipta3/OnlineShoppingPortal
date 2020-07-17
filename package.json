@@ -1,32 +1,42 @@
 {
-  "name": "jquery.dynatree",
-  "title": "jQuery Dynatree Plugin",
-  "description": "Dynatree is a JavaScript dynamic tree view plugin for jQuery with support for persistence, keyboard, checkboxes, drag'n'drop, and lazy loading.",
-  "version": "1.2.4",
-  "homepage": "http://dynatree.googlecode.com/",
+  "name": "jquery-validation",
+  "title": "jQuery Validation Plugin",
+  "description": "Form validation made easy",
+  "version": "1.11.1",
+  "homepage": "https://github.com/jzaefferer/jquery-validation",
   "author": {
-    "name": "Martin Wendt",
-    "url": "http://wwwendt.de/"
+    "name": "Jörn Zaefferer",
+    "email": "joern.zaefferer@gmail.com",
+    "url": "http://bassistance.de"
   },
   "repository": {
-    "type": "svn",
-    "url": "http://dynatree.googlecode.com/svn/trunk/"
+    "type": "git",
+    "url": "git://github.com/jzaefferer/jquery-validation.git"
   },
   "bugs": {
-    "url": "https://code.google.com/p/dynatree/issues/list"
+    "url": "https://github.com/jzaefferer/jquery-validation/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://code.google.com/p/dynatree/wiki/LicenseInfo"
-    },
-    {
-      "type": "GPL",
-      "url": "https://code.google.com/p/dynatree/wiki/LicenseInfo"
+      "url": "http://www.opensource.org/licenses/MIT"
     }
   ],
-  "dependencies": {
-    "jquery": "~1.4.2"
+  "scripts": {
+    "test": "grunt jshint qunit"
   },
-  "keywords": []
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "0.4.x",
+    "grunt-contrib-qunit": "~0.2.0",
+    "grunt-contrib-jshint": "~0.2.0",
+    "grunt-contrib-uglify": "~0.1.1",
+    "grunt-contrib-concat": "~0.1.3",
+    "grunt-zipstream": "~0.2.2"
+  },
+  "keywords": [
+    "forms",
+    "validation",
+    "validate"
+  ]
 }
